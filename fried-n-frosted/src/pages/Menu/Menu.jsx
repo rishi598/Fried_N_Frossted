@@ -84,7 +84,7 @@ const Menu = () => {
                         <p className='text-xl text-[#4A4A4A] md:w-4/5 mx-auto'>Come with family & feel the joy of mouthwatering food such as
                             Greek Salad, Lasagne, Butternut Pumpkin, Tokusen Wagyu, Olivas
                             Rellenas and more for a moderate cost</p>
-                        <button className='btn bg-orange px-8 py-3 font-semibold text-white rounded-full' >Order Now</button>
+                        {/* <button className='btn bg-orange px-8 py-3 font-semibold text-white rounded-full' >Order Now</button> */}
                     </div>
 
                 </div>
