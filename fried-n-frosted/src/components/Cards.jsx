@@ -1,12 +1,69 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useContext, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { FaHeart } from "react-icons/fa"
+import { AuthContext } from '../contexts/AuthProvider';
+import Swal from 'sweetalert2';
+import axios from 'axios';
+import useCart from "../hooks/useCart";
 
 const Cards = ({ item }) => {
+    
+    const {name, recipe, image, price, category, outOfStock, _id} = item
+    console.log(item)
     const [isLiked, setLiked] = useState(false);
+    const [cart, refetch] = useCart();
+    const {user} = useContext(AuthContext);
 
+    const navigate = useNavigate();
+    const location = useLocation();
+    
+    
     const handleLike = () => {
         setLiked(!isLiked);
+    }
+    //  add to cart
+    const handleAddtoCart = (item) => {
+        // console.log("button is clicked", item)
+        if(user && user?.email) {
+            const cartItem = {menuItemId: _id, name, recipe, category, quantity: 1, image, price, email: user.email};
+            console.log(cartItem);
+            axios.post("http://localhost:6001/carts", cartItem).then(response => {
+                // console.log(response); 
+                if(response){
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Food added to the cart!",
+                        showConfirmButton: false,
+                        timer: 1500
+                      });
+                }
+            }).catch ((error) => {
+                console.log(error.response.data.message);
+                const errorMessage = error.response.data.message;
+                Swal.fire({
+                    position: 'center',
+                    icon: 'warning',
+                    title: `${errorMessage}`,
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            })
+        } else {
+            Swal.fire({
+                title: "Please Login to order food",
+                text: "Without an account can't able to add products",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Signup Now!"
+              }).then((result) => {
+                if (result.isConfirmed) {
+                 navigate('/signup', {state: {from: location}})
+                }
+              });   
+        }
     }
 
     
@@ -28,7 +85,7 @@ const Cards = ({ item }) => {
                 <p>{item.recipe}</p>
                 <div className="card-actions justify-between items-center mt-2">
                     <h5 className='font-semibold'><span className='text-sm text-red'>₹</span>{item.price}</h5>
-                    <button className="btn bg-orange text-white rounded-full w-40">Add to Cart</button>
+                  {item.outOfStock === false ?  <button className="btn bg-orange text-white rounded-full w-40" onClick={() => handleAddtoCart(item)}>Add to Cart</button> : <div>Out of Stock</div>}
                 </div>
             </div>
         </div>

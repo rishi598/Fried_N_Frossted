@@ -13,7 +13,7 @@ const Signup = () => {
         formState: { errors },
       } = useForm();
 
-      const {createUser, login} = useContext(AuthContext);
+      const {createUser, signUpWithGmail} = useContext(AuthContext);
           // redirecting to home page or specifig page
     const location = useLocation();
     const navigate = useNavigate();
@@ -35,6 +35,13 @@ const Signup = () => {
           const errorMessage = error.message;
           // ..
         })
+      }
+      const handleSignup = () => {
+        signUpWithGmail().then((result) => {
+          const user = result.user;
+          alert("Login successfull!")
+          navigate(from, {replace: true})
+        }).catch((error) => console.log(error))
       }
   return (
     <div className="max-w-md bg-white shadow w-full mx-auto flex items-center justify-center my-20">
@@ -103,7 +110,7 @@ const Signup = () => {
           <div className="text-center space-y-3 mb-5">
           <div className="mb-5">------------------------------------------------------------------</div>
             <p>Or Sign Up using </p>
-            <button className="btn btn-circle hover:bg-orange hover:text-white">
+            <button className="btn btn-circle hover:bg-orange hover:text-white" onClick={handleSignup}>
               <FaGoogle />
             </button>
             {/* <button className="btn btn-circle hover:bg-orange hover:text-white">

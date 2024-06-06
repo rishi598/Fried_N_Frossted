@@ -1,8 +1,12 @@
 import React, { useContext } from 'react'
 import { AuthContext } from '../contexts/AuthProvider'
+import { useNavigate } from 'react-router-dom'
+import useOrder from '../hooks/useOrder'
 
 const Profile = ({ user }) => {
     const {logOut} = useContext(AuthContext)
+    const [order, refetch] = useOrder()
+    const Navigate = useNavigate();
     const handleLogOut = () => {
         logOut().then(() => {
             // Sign-out successful.
@@ -29,8 +33,15 @@ const Profile = ({ user }) => {
                 <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
                     {/* Sidebar content here */}
                     <li><a href='/update-profile'>Profile</a></li>
-                    <li><a>Order</a></li>
+                    <li>
+                            
+                                <button  onClick={()=>Navigate(`/order`)}>Orders</button>
+                            
+                        </li>
                     <li><a>Settings</a></li>
+                     <li>
+              <button onClick={()=>Navigate("/dashboard")}>Dashboard</button>
+            </li>
                     <li><a onClick={handleLogOut}>Logout</a></li>
                 </ul>
             </div>
