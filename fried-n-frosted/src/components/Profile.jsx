@@ -38,7 +38,7 @@ const Profile = ({ user }) => {
                                 <button  onClick={()=>Navigate(`/order`)}>Orders</button>
                             
                         </li>
-                    <li><a>Settings</a></li>
+                    {/* <li><a>Settings</a></li> */}
                      <li>
               <button onClick={()=>Navigate("/dashboard")}>Dashboard</button>
             </li>
