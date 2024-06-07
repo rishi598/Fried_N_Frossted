@@ -1,4 +1,4 @@
-A cafe management system using Reactjs
+A cafe management system using Reactjs, Nodejs and Mongodb
 ![image](https://github.com/rishi598/Fried_N_Frossted/assets/78724092/374ae4d7-207a-4f12-85a3-0b002e1417cf)
 ![image](https://github.com/rishi598/Fried_N_Frossted/assets/78724092/a8967842-3a56-4762-a75d-c88bc2c6b676)
 ![image](https://github.com/rishi598/Fried_N_Frossted/assets/78724092/b0a18494-463c-4a82-add0-c84436a53f98)
@@ -12,4 +12,5 @@ A cafe management system using Reactjs
 ![image](https://github.com/rishi598/Fried_N_Frossted/assets/78724092/22f6f83f-af1c-4173-b498-9368a95998ee)
 ![image](https://github.com/rishi598/Fried_N_Frossted/assets/78724092/63b08203-2b84-4d30-a9a6-e4d9627d0b99)
 ![image](https://github.com/rishi598/Fried_N_Frossted/assets/78724092/55700027-cc53-4961-931a-bcc955651292)
+![image](https://github.com/rishi598/Fried_N_Frossted/assets/78724092/dfba1777-21cc-4888-9793-99ea26975815)
 
