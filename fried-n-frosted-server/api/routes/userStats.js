@@ -22,7 +22,8 @@ router.get('/', async(req, res) => {
         },
         {
             $group: {
-                _id: '$userDetails.name', // Group by email
+                _id: '$userDetails.name', // Group by name
+                email: { $first: '$userDetails.email' }, // Use $first to get the email
                 orderCount: { $sum: 1 } // Count the number of orders
             }
         },
@@ -31,8 +32,9 @@ router.get('/', async(req, res) => {
         // },
         {
             $project: {
-                email: '$_id', // Project the email field
+                name: '$_id', // Project the email field
                 orderCount: 1, // Project the order count
+                email: 1,
                 _id: 0 // Exclude the _id field from the result
             }
         }

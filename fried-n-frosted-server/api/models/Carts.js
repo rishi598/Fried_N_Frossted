@@ -22,6 +22,7 @@ const cartSchema = new Schema({
         required: true,
         
     }
+    
 })
 
 const Carts = mongoose.model('Cart', cartSchema);

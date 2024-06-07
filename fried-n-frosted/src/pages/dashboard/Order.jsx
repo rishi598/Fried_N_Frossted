@@ -11,6 +11,15 @@ const Order = () => {
   // const orderId = useParams()
   console.log(order)
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year}`;
+  };
+
   return (
     <div className='max-w-screen-2xl container mx-auto xl:px-24 px-4'>
       {/** banner */}
@@ -37,6 +46,7 @@ const Order = () => {
         </th>
         <th>Image</th>
         <th>Item Name</th>
+        <th>Order Date</th>
         <th>Total</th>
         <th>Payment Status</th>
         <th>Delivery Status</th>
@@ -67,6 +77,7 @@ const Order = () => {
          
          
         </td>
+        <td>{formatDate(item.createdAt)}</td>
         <td>₹ {item.total / 100}</td>
         <td>{item.payment_status}</td>
         <td>{item.delivery_status}</td>

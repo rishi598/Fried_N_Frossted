@@ -15,20 +15,32 @@ router.get('/', async (req, res) => {
         const orders = await Order.countDocuments()
         
         const result = await  Order.aggregate([{
+            $sort: { createdAt: 1 } // Sort by createdAt in ascending order
+        },
+        {
             $group: {
-                _id: null,
-                totalRevenue: {
-                    $sum: '$total'
-                }
+                _id: 0,
+                totalRevenue: { $sum: '$total' },
+                firstDate: { $first: '$createdAt' },
+                lastDate: { $last: '$createdAt' }
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                totalRevenue: 1,
+                firstDate: 1,
+                lastDate: 1
             }
         }])
-        const revenue = result.length > 0 ? result[0].totalRevenue : 0;
-
+        const revenueData = result.length > 0 ? result[0] : { totalRevenue: 0, firstDate: null, lastDate: null };
         res.status(200).json({
             users, 
             menuItems, 
             orders,
-            revenue
+            revenue: revenueData.totalRevenue,
+            firstDate: revenueData.firstDate,
+            lastDate: revenueData.lastDate
         })
 
     } catch (error) {

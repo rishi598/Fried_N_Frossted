@@ -6,7 +6,7 @@ const getOrderByEmail = async (req, res) => {
         const email = req.query.email;
        
         const query = {"email": email}
-        const result = await Order.find(query);
+        const result = await Order.find(query).sort({createdAt: -1});
  
         res.status(200).json(result);
         console.log(result)
@@ -20,7 +20,7 @@ const getOrderByEmail = async (req, res) => {
 const getAllOrderItems = async(req,res) => {
     console.log("getAllOrderItems")
     try{
-        const orders = await Order.find({});
+        const orders = await Order.find({}).sort({createdAt: -1});
         res.status(200).json(orders);
         console.log(orders+"===============result on order")
     } catch (error) {

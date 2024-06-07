@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import useMenu from '../../../hooks/useMenu'
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
@@ -36,6 +36,19 @@ const ManageItems = () => {
           });
     }
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(10); // Number of items to display per page
+
+    // Calculate indexes of the first and last items on the current page
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
+    // Slice the orders array to get current items to display
+    const currentItems = menu.slice(indexOfFirstItem, indexOfLastItem);
+
+    // Pagination click handler
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
     return (
         <div className='w-full md:w-[870px] px-4 mx-auto'>
             <h2 className='text-2xl font-semibold my-4'>Manage All <span className='text-orange'>Menu Item</span></h2>
@@ -58,7 +71,7 @@ const ManageItems = () => {
                         </thead>
                         <tbody>
                             {
-                                menu.map((item, index) => (
+                                currentItems.map((item, index) => (
                                     <tr key={index}>
                                 <th>
                                     {index + 1}
@@ -96,7 +109,22 @@ const ManageItems = () => {
                     </table>
                 </div>
             </div>
+              {/* Pagination */}
+              <div className="flex justify-center my-8">
+                {Array.from({ length: Math.ceil(menu.length / itemsPerPage) }).map((_, index) => (
+                    <button
+                        key={index + 1}
+                        onClick={() => paginate(index + 1)}
+                        className={`mx-1 px-3 py-1 rounded-full ${
+                            currentPage === index + 1 ? "bg-orange text-white" : "bg-gray-200"
+                        }`}
+                    >
+                        {index + 1}
+                    </button>
+                ))}
+            </div>
         </div>
+        
     )
 }
 

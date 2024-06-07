@@ -17,6 +17,28 @@ const ManageOrders = () => {
         },
       });
 
+      const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(10); // Number of items to display per page
+
+    // Calculate indexes of the first and last items on the current page
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
+    // Slice the orders array to get current items to display
+    const currentItems = orders.slice(indexOfFirstItem, indexOfLastItem);
+
+    // Pagination click handler
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+      const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+        const year = date.getFullYear();
+    
+        return `${day}/${month}/${year}`;
+      };
+
     //   update delivery status
     const handleDeliveryStatusChange = async (deliverystatus,item) => {
         console.log(deliverystatus)
@@ -74,82 +96,85 @@ const ManageOrders = () => {
       
   return (
     <div>
-      <div className='w-full md:max-w-[870px] mx-auto px-4 flex items-center justify-between m-4'>
-      
-        <h5>Total Number of Order: {orders.length}</h5>
-      </div>
-      {/** order table */}
-      <div>
-        <div className=''>
-        <div className="overflow-x-auto">
-  <table className="table w-full md:max-w-[870px] mx-auto px-4">
-    {/* head */}
-    <thead className='bg-orange text-white'>
-      <tr>
-        <th>
-          #
-        </th>
-        <th>Image</th>
-        <th>Item Name</th>
-        <th>Total</th>
-        <th>Customer Name</th>
-        <th>Payment Status</th>
-        <th>Delivery Status</th>
-        {/* <th>Track Order</th> */}
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {/* row 1 */}
-     {
-      
-      orders.map((item, index) => (
-        
-        <tr key={index}>
-        <td>{index + 1}</td>
-        <td>
-          <div className="flex items-center gap-3">
-            <div className="avatar">
-              <div className="mask mask-squircle w-12 h-12">
-                <img src={item.cart[0].image} alt="Avatar Tailwind CSS Component" />
-              </div>
+            <div className='w-full md:max-w-[870px] mx-auto px-4 flex items-center justify-between m-4'>
+                <h5>Total Number of Orders: {orders.length}</h5>
             </div>
-            
-          </div>
-        </td>
-        <td>
-        {item.cart[0].name} <span className='text-italic'>    x{item.cart[0].quantity}</span> 
-         
-         
-        </td>
-        <td>₹ {item.total / 100}</td>
-        <td>{item.name}</td>
-        <td>{item.payment_status}</td>
-        <td>
-        <select
-                  value={item.delivery_status}
-                  onChange={(e) => handleDeliveryStatusChange(e.target.value, item)}
-                >
-                  <option value="Pending">Pending</option>
-                  <option value="Order Preparing">Order Preparing</option>
-                  <option value="Order Dispatched">Order Dispatched</option>
-                  <option value="Order Delivered">Order Delivered</option>
-                </select>
-        </td>
-        {/* <th><button onClick={()=>Navigate(`/track-order/${item._id}`)} className='text-orange'>Track Order</button></th> */}
-      </tr>
-      ))
-     }
-      
-    </tbody>
-    {/* foot */}
-    
-    
-  </table>
-</div>
+            {/* order table */}
+            <div>
+                <div className=''>
+                    <div className="overflow-x-auto">
+                        <table className="table w-full md:max-w-[870px] mx-auto px-4">
+                            {/* head */}
+                            <thead className='bg-orange text-white'>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Image</th>
+                                    <th>Item Name</th>
+                                    <th>Total</th>
+                                    <th>Customer Name</th>
+                                    <th>Order Date</th>
+                                    <th>Payment Status</th>
+                                    <th>Delivery Status</th>
+                                    {/* <th>Track Order</th> */}
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {/* rows */}
+                                {currentItems.map((item, index) => (
+                                    <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>
+                                            <div className="flex items-center gap-3">
+                                                <div className="avatar">
+                                                    <div className="mask mask-squircle w-12 h-12">
+                                                        <img src={item.cart[0].image} alt="Avatar Tailwind CSS Component" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {item.cart[0].name} <span className='text-italic'> x{item.cart[0].quantity}</span>
+                                        </td>
+                                        <td>₹ {item.total / 100}</td>
+                                        <td>{item.name}</td>
+                                        <td>{formatDate(item.createdAt)}</td>
+                                        <td>{item.payment_status}</td>
+                                        <td>
+                                            <select
+                                                value={item.delivery_status}
+                                                onChange={(e) => handleDeliveryStatusChange(e.target.value, item)}
+                                            >
+                                                <option value="Pending">Pending</option>
+                                                <option value="Order Preparing">Order Preparing</option>
+                                                <option value="Order Dispatched">Order Dispatched</option>
+                                                <option value="Order Delivered">Order Delivered</option>
+                                            </select>
+                                        </td>
+                                        {/* <th><button onClick={()=>Navigate(`/track-order/${item._id}`)} className='text-orange'>Track Order</button></th> */}
+                                    </tr>
+                                ))}
+                            </tbody>
+                            {/* foot */}
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {/* Pagination */}
+            <div className="flex justify-center my-8">
+                {Array.from({ length: Math.ceil(orders.length / itemsPerPage) }).map((_, index) => (
+                    <button
+                        key={index + 1}
+                        onClick={() => paginate(index + 1)}
+                        className={`mx-1 px-3 py-1 rounded-full ${
+                            currentPage === index + 1 ? "bg-orange text-white" : "bg-gray-200"
+                        }`}
+                    >
+                        {index + 1}
+                    </button>
+                ))}
+            </div>
         </div>
-      </div>
-    </div>
   )
 }
 

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import React from 'react'
+import React, { useState } from 'react'
 import { FaTrash, FaUser, FaUsers } from 'react-icons/fa';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 
@@ -29,6 +29,19 @@ const Users = () => {
       })
     }
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(5); // Number of items to display per page
+
+    // Calculate indexes of the first and last items on the current page
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
+    // Slice the orders array to get current items to display
+    const currentItems = users.slice(indexOfFirstItem, indexOfLastItem);
+
+    // Pagination click handler
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <div>      
       <div className='flex items-center justify-between m-4'>
@@ -52,7 +65,7 @@ const Users = () => {
     <tbody>
       {/* row 1 */}
       {
-        users.map((user, index) => (
+        currentItems.map((user, index) => (
           <tr key={index}>
         <th>{index + 1}</th>
         <td>{user.name}</td>
@@ -71,6 +84,19 @@ const Users = () => {
   </table>
 </div>
       </div>
+      <div className="flex justify-center my-8">
+                {Array.from({ length: Math.ceil(users.length / itemsPerPage) }).map((_, index) => (
+                    <button
+                        key={index + 1}
+                        onClick={() => paginate(index + 1)}
+                        className={`mx-1 px-3 py-1 rounded-full ${
+                            currentPage === index + 1 ? "bg-orange text-white" : "bg-gray-200"
+                        }`}
+                    >
+                        {index + 1}
+                    </button>
+                ))}
+            </div>
     </div>
   )
 }
