@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import useOrder from '../../hooks/useOrder';
 import { AuthContext } from '../../contexts/AuthProvider';
 import { Link, useNavigate } from 'react-router-dom'
@@ -20,6 +20,19 @@ const Order = () => {
     return `${day}/${month}/${year}`;
   };
 
+  const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(5); // Number of items to display per page
+
+    // Calculate indexes of the first and last items on the current page
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
+    // Slice the orders array to get current items to display
+    const currentItems = order.slice(indexOfFirstItem, indexOfLastItem);
+
+    // Pagination click handler
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <div className='max-w-screen-2xl container mx-auto xl:px-24 px-4'>
       {/** banner */}
@@ -34,7 +47,8 @@ const Order = () => {
       </div>
       {/**ordered items */}
       {
-        (order.length > 0) ? <div>
+        (order.length > 0) ? 
+        <div>
         <div className=''>
         <div className="overflow-x-auto">
   <table className="table">
@@ -58,7 +72,7 @@ const Order = () => {
       {/* row 1 */}
      {
       
-      order.map((item, index) => (
+      currentItems.map((item, index) => (
         
         <tr key={index}>
         <td>{index + 1}</td>
@@ -93,7 +107,22 @@ const Order = () => {
   </table>
 </div>
         </div>
-      </div> : <div className="text-center mt-20">
+        <div className="flex justify-center my-8">
+                {Array.from({ length: Math.ceil(order.length / itemsPerPage) }).map((_, index) => (
+                    <button
+                        key={index + 1}
+                        onClick={() => paginate(index + 1)}
+                        className={`mx-1 px-3 py-1 rounded-full ${
+                            currentPage === index + 1 ? "bg-orange text-white" : "bg-gray-200"
+                        }`}
+                    >
+                        {index + 1}
+                    </button>
+                ))}
+            </div>
+      </div>
+       
+       : <div className="text-center mt-20">
         <p>Nothing in your Orders. Please add products.</p>
         <Link to="/menu"><button className="btn bg-orange text-white mt-3">Back to Menu</button></Link>
       </div>
